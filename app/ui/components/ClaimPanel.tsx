@@ -1,9 +1,12 @@
 "use client"
 
+import { useState } from "react";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
 
 export default function ClaimPanel(props: { amountOfCoins: string}) {
+  const [coins, setCoins] = useState("0,00");
+
   return (
     <>
       <div className="flex w-full flex-col items-start gap-2">
@@ -18,14 +21,14 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
           icon="FeatherCoins"
         >
           <TextField.Input
-            type="number"
-            placeholder="Enter number of coins"
-            value=""
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+            type="text"
+            placeholder={coins}
+            value={coins}
+            onChange={event => { setCoins(inputFormat(event.target.value))}}
           />
         </TextField>
         <span className="text-caption font-caption text-subtext-color">
-          Enter up to {props.amountOfCoins} coins
+          Enter up to {props.amountOfCoins.replace(".", ",")} coins
         </span>
       </div>
       <Button
@@ -38,4 +41,15 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
       </Button>
     </>
   )
+}
+
+function inputFormat(value: string): string {
+  if (/[^\d,]/.test(value[value.length -1]))
+    return value.substring(0, value.length - 1)
+
+  let thatValue = value.replace(",", "");
+  if (value[0] === "0") thatValue = thatValue.substring(1);
+  const numChars = thatValue.split("");
+  numChars.splice(-2, 0, ",");
+  return numChars.join("").padStart(4, "0");
 }
