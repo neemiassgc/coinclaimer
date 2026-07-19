@@ -8,6 +8,14 @@ export async function getCoins(): Promise<string> {
   return coins.toFixed(2);
 }
 
+export async function subtractCoins(value: number) {
+  await fetch("https://habitica.com/api/v3/user/allocate",  {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({gp: value })
+  })
+}
+
 function headers() {
   return {
     "Content-Type": "application/json",
