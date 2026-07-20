@@ -7,6 +7,7 @@ import { TextField } from "./TextField";
 export default function ClaimPanel(props: { amountOfCoins: string}) {
   const [coins, setCoins] = useState("0,00");
   const [loading, setLoading] = useState(false);
+  const [helpText, setHelpText] = useState("");
 
   useEffect(() => {
     localStorage.setItem("currentCoins", props.amountOfCoins)
@@ -15,9 +16,15 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
   const subtractCoins = (gp: string) => {
     setLoading(true);
 
-    const goldToSubtract = parseFloat(replaceComma(gp));
-    const currentGold = parseFloat(replaceComma(localStorage.getItem("currentCoins") as string));
-    const newGold = (currentGold * 100 - goldToSubtract * 100) / 100;
+    const goldToSubtract = parseFloat(replaceComma(gp)) * 100;
+    const currentGold = parseFloat(replaceComma(localStorage.getItem("currentCoins") as string)) * 100;
+    if (goldToSubtract > currentGold) {
+      setHelpText("Amount not allowed");
+      setLoading(false);
+      return;
+    }
+
+    const newGold = (currentGold - goldToSubtract) / 100;
 
     fetch("/action/setCoins", {
       method: "POST",
@@ -36,14 +43,18 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
           className="h-auto w-full flex-none"
           variant="outline"
           label=""
-          helpText=""
+          error={!!helpText}
+          helpText={helpText}
           icon="FeatherCoins"
         >
           <TextField.Input
             type="text"
             placeholder={coins}
             value={coins}
-            onChange={event => { setCoins(inputFormat(event.target.value))}}
+            onChange={event => {
+              setCoins(inputFormat(event.target.value))
+              setHelpText("");
+            }}
           />
         </TextField>
         <span className="text-caption font-caption text-subtext-color">
