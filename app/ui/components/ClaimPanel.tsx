@@ -1,11 +1,30 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
 
 export default function ClaimPanel(props: { amountOfCoins: string}) {
   const [coins, setCoins] = useState("0,00");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("currentCoins", props.amountOfCoins)
+  }, [props.amountOfCoins])
+
+  const subtractCoins = (gp: string) => {
+    setLoading(true);
+
+    const goldToSubtract = parseFloat(replaceComma(gp));
+    const currentGold = parseFloat(replaceComma(localStorage.getItem("currentCoins") as string));
+    const newGold = (currentGold * 100 - goldToSubtract * 100) / 100;
+
+    fetch("/action/setCoins", {
+      method: "POST",
+      body: JSON.stringify({ gp: newGold+"" })
+    })
+    .finally(() => setLoading(false));
+  }
 
   return (
     <>
@@ -32,10 +51,11 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
         </span>
       </div>
       <Button
+        loading={loading}
         className="h-12 w-full flex-none"
         size="large"
         icon="FeatherGift"
-        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+        onClick={() => subtractCoins(coins)}
       >
         Claim coins
       </Button>
@@ -52,4 +72,8 @@ function inputFormat(value: string): string {
   const numChars = thatValue.split("");
   numChars.splice(-2, 0, ",");
   return numChars.join("").padStart(4, "0");
+}
+
+function replaceComma(value: string): string {
+  return value.replace(",", ".");
 }
