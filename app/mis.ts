@@ -1,6 +1,6 @@
 export interface ClaimBlock {
   value: number,
-  instant: string,
+  instant: Temporal.Instant,
 }
 
 export function replaceCommaPoint(value: string): string {
