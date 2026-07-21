@@ -1,5 +1,5 @@
-import { headers } from "@/app/integration/habitica";
 import { NextResponse } from "next/server";
+import headers from "../headers";
 
 export async function POST(request: Request) {
   const requestBody = await request.json();
