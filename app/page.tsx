@@ -34,7 +34,7 @@ function BalanceCardClaimButton() {
               <div className="flex items-end gap-2">
                 <span className="text-heading-1 font-heading-1 text-default-font mobile:text-heading-2 mobile:font-heading-2">
                   {
-                    amountOfCoins ?? <Loader size="large"/>
+                    amountOfCoins ? replaceCommaPoint(amountOfCoins) : <Loader size="large"/>
                   }
                 </span>
                 <span className="text-heading-3 font-heading-3 text-subtext-color pb-1">
