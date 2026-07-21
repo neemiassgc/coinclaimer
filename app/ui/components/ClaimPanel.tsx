@@ -1,18 +1,13 @@
-"use client"
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
+import { replaceCommaPoint } from "@/app/utils";
 
-export default function ClaimPanel(props: { amountOfCoins: string}) {
+export default function ClaimPanel(props: { coins: string | undefined}) {
   const [coins, setCoins] = useState("0,00");
   const [loading, setLoading] = useState(false);
   const [helpText, setHelpText] = useState("");
   const [feedbackState, setFeedbackState] = useState<"SUCCESS" | "FAILED" | "NEUTRAL">("NEUTRAL")
-
-  useEffect(() => {
-    localStorage.setItem("currentCoins", replaceCommaPoint(props.amountOfCoins))
-  }, [props.amountOfCoins])
 
   const subtractCoins = (gp: string) => () => {
     setLoading(true);
@@ -66,7 +61,7 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
           />
         </TextField>
         <span className="text-caption font-caption text-subtext-color">
-          Enter up to {replaceCommaPoint(props.amountOfCoins)} coins
+          Enter up to {props.coins ? replaceCommaPoint(props.coins) : "..."} coins
         </span>
       </div>
       <Button
@@ -104,9 +99,4 @@ function inputFormat(value: string): string {
   const numChars = thatValue.split("");
   numChars.splice(-2, 0, ",");
   return numChars.join("").padStart(4, "0");
-}
-
-function replaceCommaPoint(value: string): string {
-  if (value.includes(",")) return value.replace(",", ".");
-  return value.replace(".", ",");
 }

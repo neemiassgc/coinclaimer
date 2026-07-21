@@ -1,10 +1,23 @@
+"use client"
+
 import * as SubframeCore from "@subframe/core";
 import ClaimPanel from "./ui/components/ClaimPanel";
-import { getCoins } from "./integration/habitica";
 import ClaimHistory from "./ui/components/ClaimHistory";
+import { useEffect, useState } from "react";
+import { replaceCommaPoint } from "./utils";
+import { Loader } from "./ui/components/Loader";
 
-async function BalanceCardClaimButton() {
-  const amountOfCoins = await getCoins();
+function BalanceCardClaimButton() {
+  const [amountOfCoins, setAmountOfCoins] = useState<undefined | string>()
+
+  useEffect(() => {
+    fetch("/action/getCoins")
+    .then(res => res.text())
+    .then(coins => {
+      setAmountOfCoins(coins)
+      localStorage.setItem("currentCoins", replaceCommaPoint(coins))
+    })
+  }, [])
 
   return (
     <div className="container max-w-none flex h-full w-full flex-col items-center gap-8 bg-neutral-50 py-12 mobile:gap-6 mobile:py-6">
@@ -20,7 +33,9 @@ async function BalanceCardClaimButton() {
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-end gap-2">
                 <span className="text-heading-1 font-heading-1 text-default-font mobile:text-heading-2 mobile:font-heading-2">
-                  {amountOfCoins}
+                  {
+                    amountOfCoins ?? <Loader size="large"/>
+                  }
                 </span>
                 <span className="text-heading-3 font-heading-3 text-subtext-color pb-1">
                   coins
@@ -31,7 +46,7 @@ async function BalanceCardClaimButton() {
               </span>
             </div>
           </div>
-          <ClaimPanel amountOfCoins={amountOfCoins}/>
+          <ClaimPanel coins={amountOfCoins}/>
         </div>
         <ClaimHistory/>
       </div>
