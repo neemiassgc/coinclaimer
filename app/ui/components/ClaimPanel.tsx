@@ -11,25 +11,26 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
   const [feedbackState, setFeedbackState] = useState<"SUCCESS" | "FAILED" | "NEUTRAL">("NEUTRAL")
 
   useEffect(() => {
-    localStorage.setItem("currentCoins", props.amountOfCoins)
+    localStorage.setItem("currentCoins", replaceCommaPoint(props.amountOfCoins))
   }, [props.amountOfCoins])
 
   const subtractCoins = (gp: string) => () => {
     setLoading(true);
 
-    const goldToSubtract = parseFloat(replaceCommaPoint(gp)) * 100;
-    const currentGold = parseFloat(replaceCommaPoint(localStorage.getItem("currentCoins") as string)) * 100;
-    if (goldToSubtract > currentGold) {
+    const currentCoinsInStorage = localStorage.getItem("currentCoins") as string;
+    const coinsToSubtract = parseFloat(replaceCommaPoint(gp)) * 100;
+    const currentCoins = parseFloat(replaceCommaPoint(currentCoinsInStorage)) * 100;
+    if (coinsToSubtract > currentCoins) {
       setHelpText("Amount not allowed");
       setLoading(false);
       return;
     }
 
-    const newGold = (currentGold - goldToSubtract) / 100;
+    const newCoins = (currentCoins - coinsToSubtract) / 100;
 
     fetch("/action/setCoins", {
       method: "POST",
-      body: JSON.stringify({ gp: newGold+"" })
+      body: JSON.stringify({ gp: newCoins+"" })
     })
     .then(() => {
       setFeedbackState("SUCCESS")
