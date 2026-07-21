@@ -32,8 +32,8 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
       method: "POST",
       body: JSON.stringify({ gp: newCoins+"" })
     })
-    .then(() => {
-      setFeedbackState("SUCCESS")
+    .then((response: Response) => {
+      setFeedbackState(response.ok ? "SUCCESS" : "FAILED");
     })
     .catch(() => setFeedbackState("FAILED"))
     .finally(() => setLoading(false));
