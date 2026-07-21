@@ -1,5 +1,5 @@
 export interface ClaimBlock {
-  value: number,
+  value: string,
   instant: Temporal.Instant,
 }
 
