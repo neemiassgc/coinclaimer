@@ -4,18 +4,36 @@ import * as SubframeCore from "@subframe/core";
 import ClaimPanel from "./ui/components/ClaimPanel";
 import ClaimHistory from "./ui/components/ClaimHistory";
 import { useEffect, useState } from "react";
-import { replaceCommaPoint } from "./utils";
+import { ClaimBlock, replaceCommaPoint } from "./mis";
 import { Loader } from "./ui/components/Loader";
 
 function BalanceCardClaimButton() {
   const [amountOfCoins, setAmountOfCoins] = useState<undefined | string>()
+  const [claimHistory, setClaimHistory] = useState<ClaimBlock[]>([]);
 
   useEffect(() => {
     fetch("/action/getCoins")
     .then(res => res.text())
     .then(coins => {
-      setAmountOfCoins(coins)
+      const currentCoinsInStorage = localStorage.getItem("currentCoins") ?? "0,00";
+      const currentCoinsInNumber = parseFloat(replaceCommaPoint(currentCoinsInStorage)) * 100;
+      const updatedCoins = parseFloat(coins) * 100;
+      console.log(currentCoinsInNumber, updatedCoins)
+
+      const claimHistoryInStorage = localStorage.getItem("claimHistory") ?? "[]"
+      const claimHistory: ClaimBlock[] = JSON.parse(claimHistoryInStorage);
+      if (currentCoinsInNumber !== updatedCoins) {
+        claimHistory.push({
+          value: replaceCommaPoint(((updatedCoins - currentCoinsInNumber) / 100).toString()),
+          instant: Temporal.Now.instant()
+        })
+      }
+
+      localStorage.setItem("claimHistory", JSON.stringify(claimHistory));
       localStorage.setItem("currentCoins", replaceCommaPoint(coins))
+
+      setClaimHistory(claimHistory);
+      setAmountOfCoins(coins);
     })
   }, [])
 
