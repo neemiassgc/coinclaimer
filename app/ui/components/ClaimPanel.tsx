@@ -8,16 +8,17 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
   const [coins, setCoins] = useState("0,00");
   const [loading, setLoading] = useState(false);
   const [helpText, setHelpText] = useState("");
+  const [feedbackState, setFeedbackState] = useState<"SUCCESS" | "FAILED" | "NEUTRAL">("NEUTRAL")
 
   useEffect(() => {
     localStorage.setItem("currentCoins", props.amountOfCoins)
   }, [props.amountOfCoins])
 
-  const subtractCoins = (gp: string) => {
+  const subtractCoins = (gp: string) => () => {
     setLoading(true);
 
-    const goldToSubtract = parseFloat(replaceComma(gp)) * 100;
-    const currentGold = parseFloat(replaceComma(localStorage.getItem("currentCoins") as string)) * 100;
+    const goldToSubtract = parseFloat(replaceCommaPoint(gp)) * 100;
+    const currentGold = parseFloat(replaceCommaPoint(localStorage.getItem("currentCoins") as string)) * 100;
     if (goldToSubtract > currentGold) {
       setHelpText("Amount not allowed");
       setLoading(false);
@@ -30,6 +31,10 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
       method: "POST",
       body: JSON.stringify({ gp: newGold+"" })
     })
+    .then(() => {
+      setFeedbackState("SUCCESS")
+    })
+    .catch(() => setFeedbackState("FAILED"))
     .finally(() => setLoading(false));
   }
 
@@ -40,6 +45,7 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
           Amount to claim
         </span>
         <TextField
+          disabled={loading || feedbackState !== "NEUTRAL"}
           className="h-auto w-full flex-none"
           variant="outline"
           label=""
@@ -48,6 +54,7 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
           icon="FeatherCoins"
         >
           <TextField.Input
+            disabled={loading || feedbackState !== "NEUTRAL"}
             type="text"
             placeholder={coins}
             value={coins}
@@ -58,17 +65,30 @@ export default function ClaimPanel(props: { amountOfCoins: string}) {
           />
         </TextField>
         <span className="text-caption font-caption text-subtext-color">
-          Enter up to {props.amountOfCoins.replace(".", ",")} coins
+          Enter up to {replaceCommaPoint(props.amountOfCoins)} coins
         </span>
       </div>
       <Button
+        variant={
+          feedbackState === "FAILED" ? "destructive-primary"
+            : feedbackState === "SUCCESS" ? "sucess"
+            : "brand-primary"
+        }
         loading={loading}
         className="h-12 w-full flex-none"
         size="large"
-        icon="FeatherGift"
-        onClick={() => subtractCoins(coins)}
+        icon={
+          feedbackState === "FAILED" ? "FeatherAlertOctagon"
+            : feedbackState === "SUCCESS" ? "FeatherCheckCircle"
+            : "FeatherGift"
+        }
+        onClick={feedbackState !== "NEUTRAL" ? undefined : subtractCoins(coins)}
       >
-        Claim coins
+      {
+        feedbackState === "FAILED" ? "Failed"
+          : feedbackState === "SUCCESS" ? "Sent"
+          : "Claim Coins"
+      }
       </Button>
     </>
   )
@@ -85,6 +105,7 @@ function inputFormat(value: string): string {
   return numChars.join("").padStart(4, "0");
 }
 
-function replaceComma(value: string): string {
-  return value.replace(",", ".");
+function replaceCommaPoint(value: string): string {
+  if (value.includes(",")) return value.replace(",", ".");
+  return value.replace(".", ",");
 }
