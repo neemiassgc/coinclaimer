@@ -1,4 +1,4 @@
-export interface ClaimBlock {
+export interface ClaimTracking {
   value: string,
   instant: Temporal.Instant,
 }

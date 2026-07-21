@@ -4,12 +4,12 @@ import * as SubframeCore from "@subframe/core";
 import ClaimPanel from "./ui/components/ClaimPanel";
 import ClaimHistory from "./ui/components/ClaimHistory";
 import { useEffect, useState } from "react";
-import { ClaimBlock, replaceCommaPoint } from "./mis";
+import { ClaimTracking, replaceCommaPoint } from "./mis";
 import { Loader } from "./ui/components/Loader";
 
 function BalanceCardClaimButton() {
   const [amountOfCoins, setAmountOfCoins] = useState<undefined | string>()
-  const [claimHistory, setClaimHistory] = useState<ClaimBlock[]>([]);
+  const [claimHistory, setClaimHistory] = useState<ClaimTracking[]>([]);
 
   useEffect(() => {
     fetch("/action/getCoins")
@@ -21,7 +21,7 @@ function BalanceCardClaimButton() {
       console.log(currentCoinsInNumber, updatedCoins)
 
       const claimHistoryInStorage = localStorage.getItem("claimHistory") ?? "[]"
-      const claimHistory: ClaimBlock[] = JSON.parse(claimHistoryInStorage);
+      const claimHistory: ClaimTracking[] = JSON.parse(claimHistoryInStorage);
       if (currentCoinsInNumber !== updatedCoins) {
         claimHistory.push({
           value: replaceCommaPoint(((updatedCoins - currentCoinsInNumber) / 100).toString()),
