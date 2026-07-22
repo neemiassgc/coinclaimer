@@ -1,6 +1,6 @@
 export interface ClaimTracking {
   value: string,
-  instant: Temporal.Instant,
+  instant: string,
 }
 
 export function replaceCommaPoint(value: string): string {
