@@ -18,14 +18,13 @@ function BalanceCardClaimButton() {
       const currentCoinsInStorage = localStorage.getItem("currentCoins") ?? "0,00";
       const currentCoinsInNumber = parseFloat(replaceCommaPoint(currentCoinsInStorage)) * 100;
       const updatedCoins = parseFloat(coins) * 100;
-      console.log(currentCoinsInNumber, updatedCoins)
 
       const claimHistoryInStorage = localStorage.getItem("claimHistory") ?? "[]"
       const claimHistory: ClaimTracking[] = JSON.parse(claimHistoryInStorage);
       if (currentCoinsInNumber !== updatedCoins) {
         claimHistory.push({
           value: replaceCommaPoint(((updatedCoins - currentCoinsInNumber) / 100).toString()),
-          instant: Temporal.Now.instant()
+          instant: Temporal.Now.instant().toString()
         })
       }
 
@@ -66,7 +65,7 @@ function BalanceCardClaimButton() {
           </div>
           <ClaimPanel coins={amountOfCoins}/>
         </div>
-        <ClaimHistory/>
+        <ClaimHistory claimTracking={claimHistory}/>
       </div>
     </div>
   );
