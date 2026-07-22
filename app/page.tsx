@@ -23,7 +23,7 @@ function BalanceCardClaimButton() {
       const claimHistory: ClaimTracking[] = JSON.parse(claimHistoryInStorage);
       if (currentCoinsInNumber !== updatedCoins) {
         claimHistory.push({
-          value: replaceCommaPoint(((updatedCoins - currentCoinsInNumber) / 100).toString()),
+          value: replaceCommaPoint(((updatedCoins - currentCoinsInNumber) / 100).toFixed(2)),
           instant: Temporal.Now.instant().toString()
         })
       }
