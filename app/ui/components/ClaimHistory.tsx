@@ -2,20 +2,22 @@ import { ClaimTracking } from "@/app/mis";
 import { IconWithBackground } from "./IconWithBackground";
 
 export default function ClaimHistory(props: { claimTracking: ClaimTracking[] }) {
+  const claimCards = [];
+
+  for (let i = props.claimTracking.length - 1, key = 0; i >= 0; i--, key++)
+    claimCards.push(<ClaimCard claimTracking={props.claimTracking[i]} key={key}/>)
+
   return (
     <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
       <span className="text-heading-3 font-heading-3 text-default-font">
         Recent claims
       </span>
-      {
-        props.claimTracking.map((it, key) => <ClaimCard claimTracking={it} key={key}/>)
-      }
+      {claimCards}
     </div>
   )
 }
 
 function ClaimCard({claimTracking: { value, instant }}: { claimTracking: ClaimTracking }) {
-  console.log(instant)
   return (
     <div className="flex w-full flex-col items-start gap-4">
       <div className="flex w-full items-center gap-4">
