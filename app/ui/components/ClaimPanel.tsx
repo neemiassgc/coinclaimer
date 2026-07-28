@@ -3,7 +3,7 @@ import { Button } from "./Button";
 import { TextField } from "./TextField";
 import { replaceCommaPoint } from "@/app/mis";
 
-export default function ClaimPanel(props: { coins: string | undefined}) {
+export default function ClaimPanel(props: { reload: () => void, coins: string | undefined}) {
   const [coins, setCoins] = useState("0,00");
   const [loading, setLoading] = useState(false);
   const [helpText, setHelpText] = useState("");
@@ -27,11 +27,12 @@ export default function ClaimPanel(props: { coins: string | undefined}) {
       method: "POST",
       body: JSON.stringify({ gp: newCoins+"" })
     })
-    .then((response: Response) => {
-      setFeedbackState(response.ok ? "SUCCESS" : "FAILED");
+      .then((response: Response) => {
+        setFeedbackState(response.ok ? "SUCCESS" : "FAILED");
+        props.reload();
     })
-    .catch(() => setFeedbackState("FAILED"))
-    .finally(() => setLoading(false));
+      .catch(() => setFeedbackState("FAILED"))
+      .finally(() => setLoading(false));
   }
 
   return (

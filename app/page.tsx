@@ -11,30 +11,32 @@ function BalanceCardClaimButton() {
   const [amountOfCoins, setAmountOfCoins] = useState<undefined | string>()
   const [claimHistory, setClaimHistory] = useState<ClaimTracking[]>([]);
 
-  useEffect(() => {
+  const initLoad = () => {
     fetch("/action/getCoins")
-    .then(res => res.text())
-    .then(coins => {
-      const currentCoinsInStorage = localStorage.getItem("currentCoins") ?? "0,00";
-      const currentCoinsInNumber = parseFloat(replaceCommaPoint(currentCoinsInStorage)) * 100;
-      const updatedCoins = parseFloat(coins) * 100;
+      .then(res => res.text())
+      .then(coins => {
+        const currentCoinsInStorage = localStorage.getItem("currentCoins") ?? "0,00";
+        const currentCoinsInNumber = parseFloat(replaceCommaPoint(currentCoinsInStorage)) * 100;
+        const updatedCoins = parseFloat(coins) * 100;
 
-      const claimHistoryInStorage = localStorage.getItem("claimHistory") ?? "[]"
-      const claimHistory: ClaimTracking[] = JSON.parse(claimHistoryInStorage);
-      if (currentCoinsInNumber !== updatedCoins) {
-        claimHistory.push({
-          value: replaceCommaPoint(((updatedCoins - currentCoinsInNumber) / 100).toFixed(2)),
-          instant: Temporal.Now.instant().toString()
-        })
-      }
+        const claimHistoryInStorage = localStorage.getItem("claimHistory") ?? "[]"
+        const claimHistory: ClaimTracking[] = JSON.parse(claimHistoryInStorage);
+        if (currentCoinsInNumber !== updatedCoins) {
+          claimHistory.push({
+            value: replaceCommaPoint(((updatedCoins - currentCoinsInNumber) / 100).toFixed(2)),
+            instant: Temporal.Now.instant().toString()
+          })
+        }
 
-      localStorage.setItem("claimHistory", JSON.stringify(claimHistory));
-      localStorage.setItem("currentCoins", replaceCommaPoint(coins))
+        localStorage.setItem("claimHistory", JSON.stringify(claimHistory));
+        localStorage.setItem("currentCoins", replaceCommaPoint(coins))
 
-      setClaimHistory(claimHistory);
-      setAmountOfCoins(coins);
-    })
-  }, [])
+        setClaimHistory(claimHistory);
+        setAmountOfCoins(coins);
+      })
+  }
+
+  useEffect(initLoad, []);
 
   return (
     <div className="container max-w-none flex h-full w-full flex-col items-center gap-8 bg-neutral-50 py-12 mobile:gap-6 mobile:py-6">
@@ -63,7 +65,7 @@ function BalanceCardClaimButton() {
               </span>
             </div>
           </div>
-          <ClaimPanel coins={amountOfCoins}/>
+          <ClaimPanel reload={initLoad} coins={amountOfCoins}/>
         </div>
         <ClaimHistory claimTracking={claimHistory}/>
       </div>
