@@ -49,7 +49,7 @@ function ClaimCard({claimTracking: { value, instant }}: { claimTracking: ClaimTr
             {formatDate(Temporal.Instant.from(instant))}
           </span>
         </div>
-        <span className={`text-body-bold font-body-bold text-${value.includes("-") ? "error" : "success"}-700`}>
+        <span className={`text-body-bold font-body-bold ${value.includes("-") ? "text-error-500" : "text-success-500"}`}>
           {value.includes("-") ? value : "+"+value}
         </span>
       </div>
