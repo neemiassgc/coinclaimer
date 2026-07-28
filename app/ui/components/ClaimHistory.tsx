@@ -1,11 +1,17 @@
 import { ClaimTracking } from "@/app/mis";
 import { IconWithBackground } from "./IconWithBackground";
+import { Button } from "./Button";
+import { useState } from "react";
 
 export default function ClaimHistory(props: { claimTracking: ClaimTracking[] }) {
+  const [more, setMore] = useState(false);
+  
   const claimCards = [];
 
-  for (let i = props.claimTracking.length - 1, key = 0; i >= 0; i--, key++)
+  for (let i = props.claimTracking.length - 1, key = 0; i >= 0; i--, key++) {
     claimCards.push(<ClaimCard claimTracking={props.claimTracking[i]} key={key}/>)
+    if (!more && key === 1) break;
+  }
 
   return (
     <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
@@ -13,6 +19,15 @@ export default function ClaimHistory(props: { claimTracking: ClaimTracking[] }) 
         Recent claims
       </span>
       {claimCards}
+      <Button
+        className="h-8 w-full flex-none"
+        variant="brand-secondary"
+        onClick={() => setMore(!more)}
+      >
+        {
+          more ? "View less" : "View more"
+        }
+      </Button>
     </div>
   )
 }
