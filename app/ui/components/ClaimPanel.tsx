@@ -62,7 +62,10 @@ export default function ClaimPanel(props: { reload: () => void, coins: string | 
           />
         </TextField>
         <span className="text-caption font-caption text-subtext-color">
-          Enter up to {props.coins ? replaceCommaPoint(props.coins) : "..."} coins
+          {
+            feedbackState === "SUCCESS" ? `${coins} claimed` : feedbackState === "FAILED" ? "Nothing claimed" :
+            props.coins ? `Enter up to ${replaceCommaPoint(props.coins)} coins` : "..."
+          }
         </span>
       </div>
       <Button
@@ -83,7 +86,7 @@ export default function ClaimPanel(props: { reload: () => void, coins: string | 
       >
       {
         feedbackState === "FAILED" ? "Failed"
-          : feedbackState === "SUCCESS" ? "Sent"
+          : feedbackState === "SUCCESS" ? "Successfully"
           : "Claim Coins"
       }
       </Button>
