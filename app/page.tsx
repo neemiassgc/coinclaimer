@@ -4,7 +4,7 @@ import * as SubframeCore from "@subframe/core";
 import ClaimPanel from "./ui/components/ClaimPanel";
 import ClaimHistory from "./ui/components/ClaimHistory";
 import { useEffect, useState } from "react";
-import { ClaimTracking, replaceCommaPoint } from "./mis";
+import { ClaimTracking, replaceCommaPoint } from "./misc";
 import { Loader } from "./ui/components/Loader";
 
 function BalanceCardClaimButton() {

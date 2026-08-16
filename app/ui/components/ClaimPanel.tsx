@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
-import { replaceCommaPoint } from "@/app/mis";
+import { replaceCommaPoint } from "@/app/misc";
 
 export default function ClaimPanel(props: { reload: () => void, coins: string | undefined}) {
   const [coins, setCoins] = useState("0,00");

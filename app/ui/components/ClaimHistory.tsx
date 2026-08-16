@@ -1,4 +1,4 @@
-import { ClaimTracking } from "@/app/mis";
+import { ClaimTracking } from "@/app/misc";
 import { IconWithBackground } from "./IconWithBackground";
 import { Button } from "./Button";
 import { useState } from "react";
