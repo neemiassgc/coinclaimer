@@ -12,7 +12,7 @@ function BalanceCardClaimButton() {
   const [claimHistory, setClaimHistory] = useState<ClaimTracking[]>([]);
 
   const initLoad = () => {
-    fetch("/action/getCoins")
+    fetch("/action/coins/get")
       .then(res => res.text())
       .then(coins => {
         const currentCoinsInStorage = localStorage.getItem("currentCoins") ?? "0,00";

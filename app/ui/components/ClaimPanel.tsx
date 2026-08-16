@@ -23,7 +23,7 @@ export default function ClaimPanel(props: { reload: () => void, coins: string | 
 
     const newCoins = (currentCoins - coinsToSubtract) / 100;
 
-    fetch("/action/setCoins", {
+    fetch("/action/coins/set", {
       method: "POST",
       body: JSON.stringify({ gp: newCoins+"" })
     })
