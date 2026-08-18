@@ -1,7 +1,11 @@
 import { getCoins, getTaskDetail, getTaskGroup, setCoins } from "@/app/habitica";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const secretFromHeader = request.headers.get("gcp-secret");
+  const storedSecret = process.env["GCP_SECRET"] as string;
+  if (!secretFromHeader || secretFromHeader !== storedSecret)
+    return new NextResponse("Not Accepted", { status: 400 });
   await scan();
   return new NextResponse("Ok", { status: 200 });
 }
