@@ -1,4 +1,4 @@
-import { getCoins } from "@/app/habitica";
+import { getCoins } from "@/app/integration/habitica";
 import { NextResponse } from "next/server";
 
 export async function GET() {

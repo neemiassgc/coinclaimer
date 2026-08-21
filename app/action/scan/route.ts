@@ -1,4 +1,4 @@
-import { getCoins, getTaskDetail, getTaskGroup, setCoins } from "@/app/habitica";
+import { getCoins, getTaskDetail, getTaskGroup, setCoins } from "@/app/integration/habitica";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

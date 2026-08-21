@@ -1,4 +1,4 @@
-import { setCoins } from "@/app/habitica";
+import { setCoins } from "@/app/integration/habitica";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
