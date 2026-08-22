@@ -54,20 +54,24 @@ export async function getCoins(): Promise<number> {
   return response.data.user.stats.gp
 }
 
-export async function createTask(text: string): Promise<void> {
+export async function createTasks(texts: string[]): Promise<void> {
   const now = Temporal.Now.plainDateISO();
 
-  const bodyParameters = {
-    text,
-    type: "todo",
-    priority: "0.1",
-    date: now.add({ days: 1}).toString(),
+  const tasks = [];
+
+  for (const text of texts) {
+    tasks.push({
+      text,
+      type: "todo",
+      priority: "0.1",
+      date: now.add({ days: 1}).toString(),
+    })
   }
 
   await fetch("https://habitica.com/api/v3/tasks/user", {
     method: "POST",
     headers: headers(),
-    body: JSON.stringify(bodyParameters)
+    body: JSON.stringify(tasks.length > 1 ? tasks : tasks[0])
   });
 }
 
