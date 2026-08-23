@@ -20,7 +20,7 @@ async function scan(): Promise<void> {
 
   for (const taskId of taskGroup.daily) {
     const dailyTaskDetail = await getTaskDetail(taskId);
-    if (!dailyTaskDetail.data.completed) {
+    if (dailyTaskDetail.data.isDue && !dailyTaskDetail.data.completed) {
       await cutInHalf();
       return;
     }
