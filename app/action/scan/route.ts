@@ -1,5 +1,6 @@
 import { getCoins, getTaskDetail, getTaskGroup, setCoins } from "@/app/integration/habitica";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server"
+import 'temporal-polyfill/global'
 
 export async function GET(request: NextRequest) {
   const secretFromHeader = request.headers.get("gcp-secret");

@@ -1,3 +1,5 @@
+import 'temporal-polyfill/global'
+
 async function getUserData() {
   const res = await fetch("https://habitica.com/api/v3/user/anonymized", {
     method: "GET",
