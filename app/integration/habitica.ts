@@ -1,15 +1,7 @@
 import 'temporal-polyfill/global'
 
-async function getUserData() {
-  const res = await fetch("https://habitica.com/api/v3/user/anonymized", {
-    method: "GET",
-    headers: headers(),
-  });
-  return await res.json();
-}
-
-export async function getTaskDetail(taskId: string) {
-  const res = await fetch("https://habitica.com/api/v3/tasks/" + taskId, {
+async function getUserTasks() {
+  const res = await fetch("https://habitica.com/api/v3/tasks/user", {
     method: "GET",
     headers: headers(),
   });
@@ -17,24 +9,22 @@ export async function getTaskDetail(taskId: string) {
 }
 
 export interface TaskGroup {
-  [index: string]: string[],
-  habit: string[],
-  daily: string[],
-  todo: string[]
+  [index: string]: any[],
+  habit: any[],
+  daily: any[],
+  todo: any[]
 }
 
-export async function getTaskGroup(): Promise<TaskGroup> {
-  const userData = await getUserData();
-  const userTasks = userData.data.tasks;
+export async function getTasksGroupedByType(): Promise<TaskGroup> {
+  const userTasks = await getUserTasks();
   const taskGroup: TaskGroup = {
     habit: [],
     daily: [],
     todo: [],
   }
-
-  for (const task of userTasks)
+  for (const task of userTasks.data)
     if (task.type !== "reward")
-      taskGroup[task.type as string].push(task.id);
+      taskGroup[task.type as string].push(task);
 
   return taskGroup;
 }

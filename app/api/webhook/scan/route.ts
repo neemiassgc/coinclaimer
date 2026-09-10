@@ -1,4 +1,4 @@
-import { getCoins, getTaskDetail, getTaskGroup, setCoins } from "@/app/integration/habitica";
+import { getCoins, getTasksGroupedByType, setCoins } from "@/app/integration/habitica";
 import { NextRequest, NextResponse } from "next/server"
 import 'temporal-polyfill/global'
 
@@ -12,25 +12,22 @@ export async function GET(request: NextRequest) {
 }
 
 async function scan(): Promise<void> {
-  const taskGroup = await getTaskGroup();
-  const habitTaskDetail = await getTaskDetail(taskGroup.habit[0]);
-  if (habitTaskDetail.data.counterUp === 0) {
+  const taskGroup = await getTasksGroupedByType();
+  const habitTaskDetail = taskGroup.habit[0];
+  if (habitTaskDetail.counterUp === 0) {
     await setCoins("0");
     return;
   }
 
-  for (const taskId of taskGroup.daily) {
-    const dailyTaskDetail = await getTaskDetail(taskId);
-    if (dailyTaskDetail.data.isDue && !dailyTaskDetail.data.completed) {
+  for (const dailyTaskDetail of taskGroup.daily) {
+    if (dailyTaskDetail.isDue && !dailyTaskDetail.completed) {
       await cutInHalf();
       return;
     }
   }
 
-
-  for (const taskId of taskGroup.todo) {
-    const todoTaskDetail = await getTaskDetail(taskId);
-    if (isToday(todoTaskDetail.data.date)) {
+  for (const todoTaskDetail of taskGroup.todo) {
+    if (isToday(todoTaskDetail.date)) {
       await cutInHalf();
       return;
     }
