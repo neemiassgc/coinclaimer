@@ -47,7 +47,8 @@ export async function getCoins(): Promise<number> {
 }
 
 export async function createTasks(texts: string[]): Promise<void> {
-  const now = Temporal.Now.plainDateISO();
+  const timezoneId = "America/Sao_Paulo";
+  const now = Temporal.Now.plainDateISO(timezoneId);
 
   const tasks = [];
 
