@@ -6,9 +6,9 @@ export async function GET() {
   if (await hasToday()) {
     await createTasks([
       "2P - Praticar leitura em voz alta | 13:00 ~ 14:00",
-      "6P - Executar tarefas importantes | 14:00 ~ 17:20",
+      "6P - Consumir Pomodoros com trabalho de alto valor | 14:00 ~ 17:20",
       "2P - Praticar Duolingo | 17:20 ~ 18:20",
-      "6P - Voltar a executar tarefas importantes | 18:20 ~ 21:40",
+      "6P - Consumir Pomodoros com trabalho de alto valor | 18:20 ~ 21:40",
     ].reverse())
   }
 
